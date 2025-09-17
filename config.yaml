@@ -1,0 +1,17 @@
+app:
+  name: "Simple Poke API Service"
+  port: 8080
+database:
+  host: "localhost"
+  user: "root"
+  password: "root"
+  name: "poke_api"
+cache:
+  host: "localhost"
+  port: "6379"
+  user: "root"
+  password: "root"
+api:
+  client: "poke-api"
+  host: "https://pokeapi.co/api/v2/"
+  berry_url: "berry"
