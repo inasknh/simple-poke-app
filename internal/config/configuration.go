@@ -20,10 +20,11 @@ type Cache struct {
 }
 
 type Api struct {
-	Client   string `yaml:"client"`
-	Host     string `yaml:"host"`
-	BerryURL string `yaml:"berry_url"`
+	Client string `yaml:"client"`
+	Host   string `yaml:"host"`
+	Path   string `yaml:"path"`
 }
+
 type Configurations struct {
 	App      AppConfiguration      `yaml:"app"`
 	Database DatabaseConfiguration `yaml:"database"`
