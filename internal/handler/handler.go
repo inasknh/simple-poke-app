@@ -31,6 +31,10 @@ func (h *Handler) SyncData(rw http.ResponseWriter, r *http.Request) {
 
 }
 
+func (h *Handler) GetItems(rw http.ResponseWriter, r *http.Request) {
+
+}
+
 // httpResponseWrite is a helper function to write JSON responses with the given data and status code.
 func httpResponseWrite(rw http.ResponseWriter, data interface{}, statusCode int) {
 	rw.Header().Set("Content-type", "application/json")

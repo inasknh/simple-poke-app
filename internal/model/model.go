@@ -4,3 +4,7 @@ type Berry struct {
 	Name string `json:"name"`
 	URL  string `json:"url"`
 }
+
+type BerriesResponse struct {
+	Berries []Berry `json:"berries"`
+}

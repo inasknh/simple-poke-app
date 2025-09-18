@@ -19,6 +19,7 @@ func NewRepository(db *sql.DB) Repository {
 //go:generate mockery --name Repository --output ../mocks
 type Repository interface {
 	CreateBerry(ctx context.Context, berries []model.Berry) error
+	FetchBerries(ctx context.Context) (*model.BerriesResponse, error)
 }
 
 func (r *repository) CreateBerry(ctx context.Context, berries []model.Berry) error {
@@ -39,10 +40,34 @@ func (r *repository) CreateBerry(ctx context.Context, berries []model.Berry) err
 	}
 
 	// Execute query
-	_, err := r.db.Exec(query, vals...)
+	_, err := r.db.ExecContext(ctx, query, vals...)
 	if err != nil {
 		return fmt.Errorf("failed to insert berries: %w", err)
 	}
 
 	return nil
+}
+
+func (r *repository) FetchBerries(ctx context.Context) (*model.BerriesResponse, error) {
+	rows, err := r.db.QueryContext(ctx, "SELECT name, url FROM berries")
+	if err != nil {
+		return nil, err
+	}
+
+	res := []model.Berry{}
+	for rows.Next() {
+		var b model.Berry
+		err = rows.Scan(
+			&b.Name,
+			&b.URL,
+		)
+
+		if err != nil {
+			return nil, err
+		}
+
+		res = append(res, b)
+	}
+
+	return &model.BerriesResponse{Berries: res}, nil
 }

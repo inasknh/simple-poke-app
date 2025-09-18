@@ -14,6 +14,7 @@ type service struct {
 
 type Service interface {
 	SyncData(ctx context.Context) error
+	GetItems(ctx context.Context) (*model.BerriesResponse, error)
 }
 
 func NewService(repository repository.Repository, client api.Client) Service {
@@ -50,4 +51,8 @@ func constructBerries(res *api.BerriesResponse) []model.Berry {
 	}
 
 	return berries
+}
+
+func (s *service) GetItems(ctx context.Context) (*model.BerriesResponse, error) {
+
 }
