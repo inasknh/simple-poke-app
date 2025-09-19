@@ -49,6 +49,7 @@ func main() {
 	handler := handler2.NewHandler(service)
 
 	http.HandleFunc("/sync", handler.SyncData)
+	http.HandleFunc("/items", handler.GetItems)
 
 	port := configuration.App.Port
 	srv := &http.Server{

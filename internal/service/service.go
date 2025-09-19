@@ -55,4 +55,18 @@ func constructBerries(res *api.BerriesResponse) []model.Berry {
 
 func (s *service) GetItems(ctx context.Context) (*model.BerriesResponse, error) {
 
+	data, err := s.repository.FetchBerries(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	berries := make([]model.Berry, 0, len(data.Berries))
+	for _, berry := range data.Berries {
+		berries = append(berries, model.Berry{
+			Name: berry.Name,
+			URL:  berry.URL,
+		})
+	}
+
+	return &model.BerriesResponse{Berries: berries}, nil
 }

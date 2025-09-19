@@ -32,6 +32,13 @@ func (h *Handler) SyncData(rw http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) GetItems(rw http.ResponseWriter, r *http.Request) {
+	res, err := h.service.GetItems(r.Context())
+	if err != nil {
+		httpResponseWrite(rw, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	httpResponseWrite(rw, res, http.StatusOK)
 
 }
 
