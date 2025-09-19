@@ -16,7 +16,6 @@ func NewRepository(db *sql.DB) Repository {
 	return &repository{db: db}
 }
 
-//go:generate mockery --name Repository --output ../mocks
 type Repository interface {
 	CreateBerry(ctx context.Context, berries []model.Berry) error
 	FetchBerries(ctx context.Context) (*model.BerriesResponse, error)

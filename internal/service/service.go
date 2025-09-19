@@ -80,9 +80,7 @@ func (s *service) GetItems(ctx context.Context) (*model.BerriesResponse, error) 
 	response := &model.BerriesResponse{Berries: berries}
 
 	err = s.redisRepository.SetData(ctx, response)
-	if err != nil {
-		return nil, err
-	}
 
+	// regardless the return from SetData, it should be return response
 	return response, nil
 }
