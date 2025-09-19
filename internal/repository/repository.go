@@ -7,6 +7,10 @@ import (
 	"github.com/inasknh/simple-poke-app/internal/model"
 )
 
+const (
+	getAllBerries = "SELECT name, url FROM berries"
+)
+
 type repository struct {
 	db *sql.DB
 }
@@ -48,7 +52,7 @@ func (r *repository) CreateBerry(ctx context.Context, berries []model.Berry) err
 }
 
 func (r *repository) FetchBerries(ctx context.Context) (*model.BerriesResponse, error) {
-	rows, err := r.db.QueryContext(ctx, "SELECT name, url FROM berries")
+	rows, err := r.db.QueryContext(ctx, getAllBerries)
 	if err != nil {
 		return nil, err
 	}
