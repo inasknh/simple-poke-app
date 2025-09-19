@@ -1,6 +1,7 @@
 app:
   name: "Simple Poke API Service"
   port: 8080
+  ttl: 3600
 database:
   host: "localhost"
   user: "root"

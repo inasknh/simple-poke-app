@@ -8,8 +8,9 @@ import (
 )
 
 type service struct {
-	repository repository.Repository
-	client     api.Client
+	dbRepository    repository.Repository
+	redisRepository repository.RedisRepository
+	client          api.Client
 }
 
 type Service interface {
@@ -17,10 +18,13 @@ type Service interface {
 	GetItems(ctx context.Context) (*model.BerriesResponse, error)
 }
 
-func NewService(repository repository.Repository, client api.Client) Service {
+func NewService(repository repository.Repository,
+	redisRepository repository.RedisRepository,
+	client api.Client) Service {
 	return &service{
-		repository: repository,
-		client:     client,
+		dbRepository:    repository,
+		client:          client,
+		redisRepository: redisRepository,
 	}
 }
 
@@ -33,7 +37,7 @@ func (s *service) SyncData(ctx context.Context) error {
 
 	// insert to db
 	berries := constructBerries(res)
-	err = s.repository.CreateBerry(ctx, berries)
+	err = s.dbRepository.CreateBerry(ctx, berries)
 	if err != nil {
 		return err
 	}
@@ -55,7 +59,12 @@ func constructBerries(res *api.BerriesResponse) []model.Berry {
 
 func (s *service) GetItems(ctx context.Context) (*model.BerriesResponse, error) {
 
-	data, err := s.repository.FetchBerries(ctx)
+	cacheRes, err := s.redisRepository.GetData(ctx)
+	if cacheRes != nil {
+		return cacheRes, nil
+	}
+
+	data, err := s.dbRepository.FetchBerries(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -68,5 +77,12 @@ func (s *service) GetItems(ctx context.Context) (*model.BerriesResponse, error) 
 		})
 	}
 
-	return &model.BerriesResponse{Berries: berries}, nil
+	response := &model.BerriesResponse{Berries: berries}
+
+	err = s.redisRepository.SetData(ctx, response)
+	if err != nil {
+		return nil, err
+	}
+
+	return response, nil
 }

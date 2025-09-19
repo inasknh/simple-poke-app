@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/go-resty/resty/v2"
 	"github.com/inasknh/simple-poke-app/internal/api"
+	cache2 "github.com/inasknh/simple-poke-app/internal/cache"
 	"github.com/inasknh/simple-poke-app/internal/config"
 	db2 "github.com/inasknh/simple-poke-app/internal/db"
 	handler2 "github.com/inasknh/simple-poke-app/internal/handler"
@@ -35,7 +36,9 @@ func main() {
 	}
 
 	db := db2.NewMySql(configuration)
-	repository := repository2.NewRepository(db)
+	dbRepository := repository2.NewRepository(db)
+	cache := cache2.NewRedis(configuration.Cache)
+	redisRepository := repository2.NewRedisRepository(cache, configuration)
 
 	restyClient := resty.New().
 		SetTimeout(5 * time.Second).
@@ -45,7 +48,7 @@ func main() {
 		})
 
 	client := api.NewClient(configuration.Api, restyClient)
-	service := service2.NewService(repository, client)
+	service := service2.NewService(dbRepository, redisRepository, client)
 	handler := handler2.NewHandler(service)
 
 	http.HandleFunc("/sync", handler.SyncData)

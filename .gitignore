@@ -4,6 +4,7 @@
 *.dll
 *.so
 *.dylib
+.idea
 
 # Build outputs
 *.test

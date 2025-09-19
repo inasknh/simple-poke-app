@@ -10,6 +10,7 @@ type DatabaseConfiguration struct {
 type AppConfiguration struct {
 	Name string `yaml:"name"`
 	Port int    `yaml:"port"`
+	TTL  int    `yaml:"ttl"`
 }
 
 type Cache struct {
