@@ -25,7 +25,10 @@ type RedisRepository interface {
 
 func (r *redisRepository) GetData(ctx context.Context) (*model.BerriesResponse, error) {
 	res, err := r.cache.Get("items").Bytes()
-	if err != nil && err != redis.Nil {
+	if err != nil {
+		if err == redis.Nil {
+			return nil, nil
+		}
 		return nil, err
 	}
 
